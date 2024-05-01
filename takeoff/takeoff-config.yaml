@@ -1,0 +1,12 @@
+# This is the base config passed to the config map which the takeoff container will use to configure itself. Please
+# refer to https://docs.titanml.co/docs/Docs/launching/#configuring-takeoff-using-manifest-files for more information.
+takeoff:
+  server_config:
+    port: 3000
+  readers_config:
+    model_1:
+      model_name: TitanML/Meta-Llama-3-8B-Instruct-AWQ-4bit
+      max_sequence_length: 2048
+      device: cuda
+      max_batch_size: 5
+      consumer_group: primary

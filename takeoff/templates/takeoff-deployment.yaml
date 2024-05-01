@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: takeoff
+  namespace: takeoff
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: takeoff
+  template:
+    metadata:
+      labels:
+        app: takeoff
+    spec:
+      containers:
+        - name: takeoff
+          image: tytn/takeoff-pro:{{ .Values.takeoff_version }}{{- if .Values.gpu }}-gpu{{- else }}-cpu{{- end }}
+          imagePullPolicy: Always
+          ports:
+            - name: takeoff
+              containerPort: 3000
+            - name: management
+              containerPort: 3001
+          env:
+            - name: TAKEOFF_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: takeoff-secrets
+                  key: TAKEOFF_ACCESS_TOKEN
+            - name: LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: takeoff-secrets
+                  key: LICENSE_KEY
+            {{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+            {{- end }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /code/config.yaml
+              subPath: takeoff-config.yaml
+            - name: takeoff-cache
+              mountPath: /code/models
+          {{- if .Values.gpu }}
+          resources:
+            limits:
+              nvidia.com/gpu: 1
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+              - sh
+              - -c
+              - wget -qO- http://localhost:3000/status | grep "live_readers\":{\""; if [[ $? -eq 0 ]]; then echo 0; else echo 1; fi
+            initialDelaySeconds: 120
+            periodSeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 10
+          startupProbe:                                                                                                                                                                 
+            failureThreshold: 60                                                                                                                                                    
+            httpGet:                                                                                                                                                                    
+              path: /healthz                                                                                                                                                            
+              port: 3000                                                                                                                                                                                                                                                                                                                        
+            periodSeconds: 10                                                                                                                                                     
+            successThreshold: 1                                                                                                          
+            timeoutSeconds: 1
+      imagePullSecrets:
+        - name: takeoff-regcred
+      volumes:
+        - name: config-volume
+          configMap:
+            name: takeoff-config
+        - name: takeoff-cache
+          persistentVolumeClaim:
+            claimName: takeoff-cache-pvc
+        

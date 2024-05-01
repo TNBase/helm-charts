@@ -1,0 +1,23 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: takeoff-ingress
+  namespace: takeoff
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+    rules:
+        - host: {{ .Values.ingress.host }}
+          http:
+            paths:
+            {{- range .Values.ingress.paths }}
+            - path: {{ .path }}
+              pathType: Prefix
+              backend:
+                service:
+                  name: takeoff-service
+                  port: 
+                    name: {{ .port_name }}
+            {{- end }}
+{{- end }}

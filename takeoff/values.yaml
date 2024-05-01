@@ -1,0 +1,39 @@
+# The version of Takeoff you want to use
+takeoff_version: 0.14.3
+gpu: true
+
+# Secrets passed to the Takeoff container as environment variables
+# Here you need to add your own access token and license key.
+secrets:
+# TAKEOFF_ACCESS_TOKEN:
+# LICENSE_KEY:
+
+# Other environment variables passed to the Takeoff container
+env:
+  TAKEOFF_LOG_LEVEL: INFO
+  RUST_LOG: WARNING
+
+service:
+  type: ClusterIP
+  ports:
+  - name: inference
+    port: 3000 # Default TAKEOFF_PORT
+    targetPort: inference
+  - name: management
+    port: 3001 # Default TAKEOFF_MANAGEMENT_PORT
+    targetPort: management
+
+local_cache:
+  enabled: true
+  size: 40Gi
+  host_path: /.takeoff-cache
+  storage_class: microk8s-hostpath
+
+ingress:
+  enabled: true
+  host: localhost
+  paths:
+  - path: /inference(/|$)(.*)
+    port_name: inference
+  - path: /management(/|$)(.*)
+    port_name: management
