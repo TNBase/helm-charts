@@ -1,18 +1,20 @@
-{{- if not .Values.statefulset }}
+{{- if .Values.statefulset }}
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: takeoff
-  namespace: {{ .Values.namespace | default "default"}}
+  name: takeoff-set
+  namespace: {{ .Values.namespace | default "default" }}
 spec:
-  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: takeoff
+      app: takeoff-set
+  serviceName: "takeoff-set"
+  replicas: {{ .Values.replicas }}
+  minReadySeconds: 10
   template:
     metadata:
       labels:
-        app: takeoff
+        app: takeoff-set
     spec:
       containers:
         - name: takeoff
@@ -77,7 +79,13 @@ spec:
         - name: config-volume
           configMap:
             name: takeoff-config
-        - name: takeoff-cache
-          persistentVolumeClaim:
-            claimName: takeoff-cache-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: takeoff-cache
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: {{ .Values.local_cache.storage_class }}
+      resources:
+        requests:
+          storage: {{ .Values.local_cache.size | default "40Gi"}}
 {{- end }}

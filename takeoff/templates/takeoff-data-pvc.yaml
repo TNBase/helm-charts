@@ -1,4 +1,4 @@
-{{- if .Values.local_cache.enabled }}
+{{- if not .Values.statefulset }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -16,15 +16,14 @@ spec:
   storageClassName: {{ default "" .Values.local_cache.storage_class }}
 {{- end }}
 ---
+{{- if not .Values.statefulset }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: takeoff-cache-pvc
   namespace: {{ .Values.namespace | default "default"}}
-  {{- if .Values.local_cache.enabled }}
   labels: 
     type: local
-  {{- end }}
 spec:
   accessModes:
     - ReadWriteMany
@@ -32,6 +31,5 @@ spec:
     requests:
       storage: {{ default "40Gi" .Values.local_cache.size  }}
   storageClassName: {{ default "" .Values.local_cache.storage_class }}
-  {{- if .Values.local_cache.enabled }}
   volumeName: takeoff-cache-pv
-  {{- end }}
+{{- end }}

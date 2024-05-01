@@ -5,6 +5,9 @@ number_of_gpus: 1
 
 # What namespace to deploy takeoff resources in (default is "default")
 namespace: takeoff
+# Should deploy a statefulset instead of a deployment
+statefulset: true
+replicas: 1
 
 # CPU request for a Takeoff container
 cpu_request: 1
@@ -32,13 +35,13 @@ service:
     targetPort: management
 
 local_cache:
-  enabled: true
+  enabled: false
   size: 40Gi
   host_path: /.takeoff-cache
   storage_class: microk8s-hostpath
 
 ingress:
-  enabled: true
+  enabled: false
   host: localhost
   paths:
   - path: /takeoff/(.*)
