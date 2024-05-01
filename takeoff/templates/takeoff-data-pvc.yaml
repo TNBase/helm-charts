@@ -10,7 +10,7 @@ spec:
   capacity:
     storage: {{ default "40Gi" .Values.local_cache.size }}
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   hostPath:
     path: {{ .Values.local_cache.host_path }}
   storageClassName: {{ default "" .Values.local_cache.storage_class }}
@@ -27,7 +27,7 @@ metadata:
   {{- end }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: {{ default "40Gi" .Values.local_cache.size  }}

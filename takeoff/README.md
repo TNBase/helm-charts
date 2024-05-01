@@ -12,8 +12,12 @@ In order to pull the Takeoff container you need to have logged into your account
 cp $HOME/.docker/config.json .dockerconfig.json
 ```
 
-## Installing the Chart
+## Launching
+
+To install the helm chart ensure you have the desired values in the `values.yaml` file and the config set in the `takeoff-config.yaml` (initial launch config for Takeoff). Then run the following command:
 
 ```bash
 helm install takeoff-helm . --values values.yaml       
 ```
+
+This should spin up Takeoff in your Kubernetes cluster.

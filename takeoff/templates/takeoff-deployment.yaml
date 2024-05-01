@@ -43,17 +43,21 @@ spec:
               subPath: takeoff-config.yaml
             - name: takeoff-cache
               mountPath: /code/models
-          {{- if .Values.gpu }}
           resources:
             limits:
-              nvidia.com/gpu: 1
-          {{- end }}
+              memory: {{ .Values.memory_limit | default "20Gi" }}
+              {{- if .Values.gpu }}
+              nvidia.com/gpu: {{ .Values.number_of_gpus }}
+              {{- end }}
+            requests:
+              memory: {{ .Values.memory_limit | default "20Gi" }}
+              cpu: {{ .Values.cpu_request | default "1" }}
           livenessProbe:
             exec:
               command:
               - sh
               - -c
-              - wget -qO- http://localhost:3000/status | grep "live_readers\":{\""; if [[ $? -eq 0 ]]; then echo 0; else echo 1; fi
+              - wget -qO- http://localhost:3000/status | grep "dead_readers\":{\""; if [[ $? -eq 1 ]]; then exit 0; else exit 1; fi
             initialDelaySeconds: 120
             periodSeconds: 5
             timeoutSeconds: 10

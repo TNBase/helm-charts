@@ -1,9 +1,14 @@
 # The version of Takeoff you want to use
 takeoff_version: 0.14.3
 gpu: true
+number_of_gpus: 1
 
 # What namespace to deploy takeoff resources in (default is "default")
 namespace: takeoff
+
+# CPU request for a Takeoff container
+cpu_request: 1
+memory_limit: 20Gi
 
 # Secrets passed to the Takeoff container as environment variables
 # Here you need to add your own access token and license key.
