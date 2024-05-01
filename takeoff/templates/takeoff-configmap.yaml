@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: takeoff-config
-  namespace: takeoff
+  namespace: {{ .Values.namespace | default "default"}}
 data:
   takeoff-config.yaml: |
 {{ .Files.Get "takeoff-config.yaml" | indent 4 }}

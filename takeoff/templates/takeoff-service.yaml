@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: takeoff-service
-  namespace: takeoff
+  namespace: {{ .Values.namespace | default "default"}}
 spec:
   type: {{ .Values.service.type }}
   ports:

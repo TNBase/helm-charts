@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: takeoff
-  namespace: takeoff
+  namespace: {{ .Values.namespace | default "default"}}
 spec:
   replicas: 1
   selector:

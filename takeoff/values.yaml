@@ -2,23 +2,26 @@
 takeoff_version: 0.14.3
 gpu: true
 
+# What namespace to deploy takeoff resources in (default is "default")
+namespace: takeoff
+
 # Secrets passed to the Takeoff container as environment variables
 # Here you need to add your own access token and license key.
 secrets:
-# TAKEOFF_ACCESS_TOKEN:
-# LICENSE_KEY:
+  TAKEOFF_ACCESS_TOKEN: ""
+  LICENSE_KEY: ""
 
 # Other environment variables passed to the Takeoff container
 env:
   TAKEOFF_LOG_LEVEL: INFO
-  RUST_LOG: WARNING
+  RUST_LOG: INFO
 
 service:
   type: ClusterIP
   ports:
-  - name: inference
+  - name: takeoff
     port: 3000 # Default TAKEOFF_PORT
-    targetPort: inference
+    targetPort: takeoff
   - name: management
     port: 3001 # Default TAKEOFF_MANAGEMENT_PORT
     targetPort: management
@@ -33,7 +36,7 @@ ingress:
   enabled: true
   host: localhost
   paths:
-  - path: /inference(/|$)(.*)
-    port_name: inference
-  - path: /management(/|$)(.*)
+  - path: /takeoff/(.*)
+    port_name: takeoff
+  - path: /management/(.*)
     port_name: management

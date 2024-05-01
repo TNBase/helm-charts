@@ -6,10 +6,10 @@ This is our example template of a Helm chart for deploying Takeoff in Kubernetes
 
 ### Docker Pull Secret
 
-In order to pull the Takeoff container you need to have logged into your account which has been given permission to access the Takeoff container in DockerHub. Then you can create the secret with the following command:
+In order to pull the Takeoff container you need to have logged into your account which has been given permission to access the Takeoff container in DockerHub. Then if you copy the config.json created by Docker into this directory it will be used to pull the container.
 
 ```bash
-kubectl create secret generic takeoff-regcred --from-file=.dockerconfigjson=<path/to/.docker/config.json> --type=kubernetes.io/dockerconfigjson
+cp $HOME/.docker/config.json .dockerconfig.json
 ```
 
 ## Installing the Chart
