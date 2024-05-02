@@ -1,0 +1,89 @@
+# The version of Takeoff you want to use
+takeoff_version: 0.14.3
+gpu: true
+number_of_gpus: 1
+
+# What namespace to deploy takeoff resources in (default is "default")
+namespace: default
+# Should deploy a statefulset instead of a deployment
+statefulset: true
+replicas: 1
+
+# CPU request for a Takeoff container
+cpu_request: 1
+memory_limit: 20Gi
+
+# Secrets passed to the Takeoff container as environment variables
+# Here you need to add your own access token and license key.
+secrets:
+  TAKEOFF_ACCESS_TOKEN: ""
+  LICENSE_KEY: ""
+
+# Other environment variables passed to the Takeoff container
+env:
+  TAKEOFF_LOG_LEVEL: INFO
+  RUST_LOG: INFO
+
+service:
+  type: ClusterIP
+  ports:
+  - name: takeoff
+    port: 3000 # Default TAKEOFF_PORT
+    targetPort: takeoff
+  - name: management
+    port: 3001 # Default TAKEOFF_MANAGEMENT_PORT
+    targetPort: management
+
+local_cache:
+  enabled: false
+  size: 40Gi
+  host_path: /.takeoff-cache
+  storage_class: microk8s-hostpath
+
+ingress:
+  enabled: false
+  host: localhost
+  paths:
+  - path: /takeoff/(.*)
+    port_name: takeoff
+  - path: /management/(.*)
+    port_name: management
+
+
+
+# OTHER STUFF
+
+weaviate:
+  image: semitechnologies/weaviate:1.21.2
+  env:
+    DISK_USE_READONLY_PERCENTAGE: "95"
+    QUERY_DEFAULTS_LIMIT: "25"
+    AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: "true"
+    PERSISTENCE_DATA_PATH: "/var/lib/weaviate"
+    DEFAULT_VECTORIZER_MODULE: "none"
+    ENABLE_MODULES: ""
+    CLUSTER_HOSTNAME: "node1"
+  volume:
+    name: weaviate-data
+    path: /var/lib/weaviate
+    pvcName: weaviate-data-pvc
+
+
+rag:
+  image: tytn/rag-server:latest
+  ports:
+    http: 8000
+  env:
+    WEAVIATE_URL: http://weaviate-service:8080
+    TAKEOFF_PORT: "3000"
+    TAKEOFF_MANAGEMENT_PORT: "3001"
+    UNSTRUCTURED_API_URL: "http://unstructured-service:8001" 
+    PYTHONUNBUFFERED: "1"
+    TAKEOFF_HOST: "takeoff-service"
+    APP_USERNAME: "titanml"
+    APP_PASSWORD: "tbeast2023"
+  volumes:
+    data:
+      mountPath: /TakeoffRag/data/
+    logs:
+      mountPath: /TakeoffRag/logs/

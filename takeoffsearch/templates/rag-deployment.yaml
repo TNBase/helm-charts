@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rag
+  template:
+    metadata:
+      labels:
+        app: rag
+    spec:
+      initContainers:
+      - name: wait-for-weaviate
+        image: curlimages/curl:7.68.0
+        command: ['sh', '-c', 'until curl -fs http://weaviate-service:8080/v1/.well-known/ready; do echo waiting for weaviate; sleep 2; done;']
+      containers:
+      - name: rag
+        image: "{{ .Values.rag.image }}"
+        ports:
+        - containerPort: {{ .Values.rag.ports.http }}
+        env:
+        {{- range $key, $value := .Values.rag.env }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{- end }}
+        volumeMounts:
+        - name: data-volume
+          mountPath: "{{ .Values.rag.volumes.data.mountPath }}"
+        - name: logs-volume
+          mountPath: "{{ .Values.rag.volumes.logs.mountPath }}"
+      volumes:
+      - name: data-volume
+        emptyDir: {}
+      - name: logs-volume
+        emptyDir: {}

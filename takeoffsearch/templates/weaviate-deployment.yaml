@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weaviate-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weaviate
+  template:
+    metadata:
+      labels:
+        app: weaviate
+    spec:
+      containers:
+      - name: weaviate
+        image: "{{ .Values.weaviate.image }}"
+        ports:
+        - containerPort: 8080
+          name: http
+        env:
+        {{- range $key, $value := .Values.weaviate.env }}
+        - name: {{ $key }}
+          value: "{{ $value }}"
+        {{- end }}
+        volumeMounts:
+        - name: weaviate-data
+          mountPath: "{{ .Values.weaviate.volume.path }}"
+        readinessProbe:
+          httpGet:
+            path: /v1/.well-known/ready
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 5
+      volumes:
+      - name: weaviate-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.weaviate.volume.pvcName }}
+
+     

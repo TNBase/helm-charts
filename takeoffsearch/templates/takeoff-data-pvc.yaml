@@ -1,0 +1,35 @@
+{{- if not .Values.statefulset }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: takeoff-cache-pv
+  namespace: {{ .Values.namespace | default "default"}}
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: {{ default "40Gi" .Values.local_cache.size }}
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: {{ .Values.local_cache.host_path }}
+  storageClassName: {{ default "" .Values.local_cache.storage_class }}
+{{- end }}
+---
+{{- if not .Values.statefulset }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: takeoff-cache-pvc
+  namespace: {{ .Values.namespace | default "default"}}
+  labels: 
+    type: local
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ default "40Gi" .Values.local_cache.size  }}
+  storageClassName: {{ default "" .Values.local_cache.storage_class }}
+  volumeName: takeoff-cache-pv
+{{- end }}
