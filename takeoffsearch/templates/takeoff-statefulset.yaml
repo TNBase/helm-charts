@@ -44,7 +44,7 @@ spec:
             - name: config-volume
               mountPath: /code/config.yaml
               subPath: takeoff-config.yaml
-            - name: takeoff-cache
+            - name: takeoff-cache-pvc
               mountPath: /code/models
           resources:
             limits:
@@ -81,10 +81,11 @@ spec:
             name: takeoff-config
   volumeClaimTemplates:
   - metadata:
-      name: takeoff-cache
+      name: takeoff-cache-pvc
     spec:
+      storageClassName: "gp2" # Adjust based on your needs
       accessModes: ["ReadWriteOnce"]
-      storageClassName: {{ .Values.local_cache.storage_class }}
+      # storageClassName: {{ .Values.local_cache.storage_class }}
       resources:
         requests:
           storage: {{ .Values.local_cache.size | default "40Gi"}}

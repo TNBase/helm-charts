@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: unstructured-deployment
+  namespace: {{ .Values.namespace | default "default"}}
   labels:
     app: unstructured
 spec:
@@ -19,3 +20,9 @@ spec:
         image: downloads.unstructured.io/unstructured-io/unstructured-api:latest
         ports:
         - containerPort: 8000
+        resources:
+          limits:
+            memory: {{ .Values.memory_limit | default "20Gi" }}
+          requests:
+            memory: {{ .Values.memory_limit | default "20Gi" }}
+            cpu: {{ .Values.cpu_request | default "1" }}

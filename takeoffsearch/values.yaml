@@ -4,7 +4,7 @@ gpu: true
 number_of_gpus: 1
 
 # What namespace to deploy takeoff resources in (default is "default")
-namespace: default
+namespace: takeoffsearch
 # Should deploy a statefulset instead of a deployment
 statefulset: true
 replicas: 1

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rag-deployment
+  namespace: {{ .Values.namespace | default "default"}}
 spec:
   replicas: 1
   selector:
@@ -31,6 +32,12 @@ spec:
           mountPath: "{{ .Values.rag.volumes.data.mountPath }}"
         - name: logs-volume
           mountPath: "{{ .Values.rag.volumes.logs.mountPath }}"
+        resources:
+          limits:
+            memory: {{ .Values.memory_limit | default "20Gi" }}
+          requests:
+            memory: {{ .Values.memory_limit | default "20Gi" }}
+            cpu: {{ .Values.cpu_request | default "1" }}
       volumes:
       - name: data-volume
         emptyDir: {}

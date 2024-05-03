@@ -2,9 +2,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: weaviate-data-pvc
+  namespace: {{ .Values.namespace | default "default"}}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 40Gi # Adjust based on your needs
+  storageClassName: "gp2" # Adjust based on your needs
