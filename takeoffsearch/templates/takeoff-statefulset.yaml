@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: takeoff
-          image: tytn/takeoff-pro:{{ .Values.takeoff_version }}{{- if .Values.gpu }}-gpu{{- else }}-cpu{{- end }}
+          image: tytn/takeoff:{{ .Values.takeoff_version }}{{- if .Values.gpu }}-gpu{{- else }}-cpu{{- end }}
           imagePullPolicy: Always
           ports:
             - name: takeoff
