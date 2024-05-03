@@ -13,6 +13,7 @@ replicas: 1
 cpu_request: 1
 memory_limit: 20Gi
 
+# **IMPORTANT**: YOU NEED TO SET LICENSE_KEY IN ORDER TO USE TAKEOFF! 
 # Secrets passed to the Takeoff container as environment variables
 # Here you need to add your own access token and license key.
 secrets:
@@ -34,12 +35,16 @@ service:
     port: 3001 # Default TAKEOFF_MANAGEMENT_PORT
     targetPort: management
 
+# Configuration for Takeoff cache
+# Note: true for microk8s, false for eks
 local_cache:
   enabled: false
   size: 40Gi
   host_path: /.takeoff-cache
   storage_class: microk8s-hostpath
 
+# Ingress configuration for Takeoff
+# Note: Use false for development purposes
 ingress:
   enabled: false
   host: localhost
@@ -50,9 +55,7 @@ ingress:
     port_name: management
 
 
-
-# OTHER STUFF
-
+# Weaviate configuration
 weaviate:
   image: semitechnologies/weaviate:1.21.2
   env:
@@ -68,7 +71,7 @@ weaviate:
     path: /var/lib/weaviate
     pvcName: weaviate-data-pvc
 
-
+# RAG Server configuration
 rag:
   image: tytn/rag-server:latest
   ports:
@@ -80,8 +83,8 @@ rag:
     UNSTRUCTURED_API_URL: "http://unstructured-service:8001" 
     PYTHONUNBUFFERED: "1"
     TAKEOFF_HOST: "takeoff-service"
-    APP_USERNAME: "titanml"
-    APP_PASSWORD: "tbeast2023"
+    APP_USERNAME: "macquarie"
+    APP_PASSWORD: ""
   volumes:
     data:
       mountPath: /TakeoffRag/data/

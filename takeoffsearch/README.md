@@ -1,46 +1,61 @@
-# Takeoff Helm Chart
+# Takeoff Search Helm Chart
 
-This is our example template of a Helm chart for deploying Takeoff in Kubernetes. 
+This is our example template of a Helm chart for deploying Takeoff Search app in Kubernetes. 
 
 # TODO
 
-- Add data injection documentation 
-- Provide the license key
+- Complete the data injection documentation.
+- Provide the license key information.
 
 ## Prerequisites
 
+### License Key Configuration
 
-### Fill out License key of takeoff
+You must provide a license key in the `values.yaml` file. Leave the `takeoff_access_token` field empty for now. The secrets configuration below is where you will input your access token and license key, which are passed to the Takeoff container as environment variables:
 
-In values.yaml you need to provide license key. you can leave the takeoff_access_token blank for now
-# Secrets passed to the Takeoff container as environment variables
-# Here you need to add your own access token and license key.
+```yaml
 secrets:
   TAKEOFF_ACCESS_TOKEN: ""
   LICENSE_KEY: ""
-
-
+```
 
 ## Launching
 
-To install the helm chart you need to first create a namespace. ex. 
-```
+### Creating a Namespace
+
+Start by creating a Kubernetes namespace for the deployment:
+
+```bash
 kubectl create namespace takeoffsearch 
 ```
 
+### Installing the Helm Chart
 
-To install the helm chart ensure you have the desired values in the `values.yaml` file and the config set in the `takeoff-config.yaml` (initial launch config for Takeoff). Then run the following command:
+Ensure you have configured the `values.yaml` and `takeoff-config.yaml` files with the appropriate settings for your deployment. Use the following command to install the Helm chart:
 
 ```bash
-helm install takeoffsearch ./ --namespace takeoffsearch --values values.yaml      
+helm install takeoffsearch ./ --namespace takeoffsearch --values values.yaml
 ```
 
-This should spin up takeoff search project in your Kubernetes cluster.
+This command deploys the Takeoff search project into your Kubernetes cluster.
+
+## Post-Installation
+
+### Verifying the Application
+
+After installing the Takeoffsearch Helm chart, you can verify if the search application is operational by forwarding the service port to your local machine:
+
+```bash
+kubectl port-forward service/takeoffsearch 8000:80 --namespace takeoffsearch
+```
+
+Open a web browser and navigate to `http://localhost:8000` to access the Takeoff search interface. Log in with the provided credentials.
+
+- username: macquarie
+- password: macquarie2024
 
 
-## Post installation
-
-Once we have takeoffsearch helm chart installed, we can check if the search app is running using portforward. What I usually do is just to portforward the rag service to localhost:8000. And we can login using the following username and password: 
+### Data Injection
 
 
-## Data Injection 
+TODO
