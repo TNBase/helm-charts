@@ -44,6 +44,9 @@ spec:
               subPath: takeoff-config.yaml
             - name: takeoff-cache
               mountPath: /code/models
+            - name: liveness-check
+              mountPath: /code/liveness-check.py
+              subPath: liveness-check.py
           resources:
             limits:
               memory: {{ .Values.memory_limit | default "20Gi" }}
@@ -56,9 +59,8 @@ spec:
           livenessProbe:
             exec:
               command:
-              - sh
-              - -c
-              - wget -qO- http://localhost:3000/status | grep "dead_readers\":{\""; if [[ $? -eq 1 ]]; then exit 0; else exit 1; fi
+              - python
+              - /code/liveness-check.py
             initialDelaySeconds: 120
             periodSeconds: 5
             timeoutSeconds: 10
@@ -80,4 +82,7 @@ spec:
         - name: takeoff-cache
           persistentVolumeClaim:
             claimName: takeoff-cache-pvc
+        - name: liveness-check
+          configMap:
+            name: takeoff-liveness-check
 {{- end }}
