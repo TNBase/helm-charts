@@ -2,6 +2,13 @@
 
 This is our example template of a Helm chart for deploying Takeoff in Kubernetes. 
 
+# TODO
+
+- Add data injection documentation 
+- Remove unused yaml: namespace, data-pvc and deployment 
+- Try install from scratch again
+- change takeoff-pro to takeoff and then they don't need to login to takeoffusers
+
 ## Prerequisites
 
 ### Docker Pull Secret
