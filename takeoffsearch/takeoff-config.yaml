@@ -3,10 +3,10 @@
 takeoff:
   server_config:
     port: 3000
+    max_batch_size: 512
   readers_config:
     model_1:
-      model_name: TitanML/Meta-Llama-3-8B-Instruct-AWQ-4bit
-      max_sequence_length: 2048
+      model_name: facebook/opt-125m
       device: cuda
       max_batch_size: 2
       consumer_group: generate

@@ -84,7 +84,7 @@ rag:
     PYTHONUNBUFFERED: "1"
     TAKEOFF_HOST: "takeoff-service"
     APP_USERNAME: "macquarie"
-    APP_PASSWORD: ""
+    APP_PASSWORD: "macquarie2024"
   volumes:
     data:
       mountPath: /TakeoffRag/data/
