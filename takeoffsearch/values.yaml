@@ -57,7 +57,7 @@ ingress:
 
 # Weaviate configuration
 weaviate:
-  image: semitechnologies/weaviate:1.21.2
+  image: semitechnologies/weaviate:1.24.8
   env:
     DISK_USE_READONLY_PERCENTAGE: "95"
     QUERY_DEFAULTS_LIMIT: "25"
@@ -73,7 +73,7 @@ weaviate:
 
 # RAG Server configuration
 rag:
-  image: tytn/rag-server:latest
+  image: tytn/rag-server:v0.1
   ports:
     http: 8000
   env:
