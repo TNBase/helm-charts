@@ -73,7 +73,7 @@ weaviate:
 
 # RAG Server configuration
 rag:
-  image: tytn/rag-server:v0.1
+  image: tytn/rag-server:latest
   ports:
     http: 8000
   env:
