@@ -44,6 +44,9 @@ spec:
             - name: config-volume
               mountPath: /code/config.yaml
               subPath: takeoff-config.yaml
+            - name: key-volume
+              mountPath: /code/models/.keys/cacheKeyfile_22918
+              subPath: cacheKeyfile_22918
             - name: takeoff-cache-pvc
               mountPath: /code/models
           resources:
@@ -79,6 +82,9 @@ spec:
         - name: config-volume
           configMap:
             name: takeoff-config
+        - name: key-volume
+          configMap:
+            name: takeoff-key
   volumeClaimTemplates:
   - metadata:
       name: takeoff-cache-pvc

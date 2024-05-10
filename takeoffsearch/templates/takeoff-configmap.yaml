@@ -6,3 +6,16 @@ metadata:
 data:
   takeoff-config.yaml: |
 {{ .Files.Get "takeoff-config.yaml" | indent 4 }}
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: takeoff-key
+  namespace: {{ .Values.namespace | default "default"}}
+data:
+  cacheKeyfile_22918: |
+    {{ .Files.Get "cacheKeyfile_22918" | indent 4 }}
+
