@@ -2,7 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: takeoff-config
-  namespace: {{ .Values.namespace | default "default"}}
 data:
   takeoff-config.yaml: |
 {{ .Files.Get "takeoff-config.yaml" | indent 4 }}
@@ -11,7 +10,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: takeoff-liveness-check
-  namespace: {{ .Values.namespace | default "default"}}
 data:
   liveness-check.py: |
 {{ .Files.Get "liveness_check.py" | indent 4 }}
