@@ -6,9 +6,9 @@ takeoff:
     max_batch_size: 512
   readers_config:
     model_1:
-      model_name: facebook/opt-125m
-      device: cuda
-      max_batch_size: 2
+      model_name: TitanML/dummy_model
+      device: cpu
+      max_batch_size: 1
       consumer_group: generate
     model_2:
       model_name: TitanML/jina-v2-base-en-embed
